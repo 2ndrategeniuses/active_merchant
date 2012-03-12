@@ -414,6 +414,23 @@ class AuthorizeNetCimTest < Test::Unit::TestCase
     assert_nil response.authorization
   end
 
+  def test_should_update_customer_payment_profile_request_with_masked_credit_card
+    @gateway.expects(:ssl_post).returns(successful_update_customer_payment_profile_response)
+    credit_card = ActiveMerchant::Billing::CreditCard.new
+    credit_card.number = 'XXXX1111'
+    credit_card.month = ''
+    credit_card.year = 'XXXX'
+
+    assert response = @gateway.update_customer_payment_profile(
+      :customer_profile_id => @customer_profile_id,
+      :payment_profile => {
+        :customer_payment_profile_id => @customer_payment_profile_id,
+        :customer_type => 'business',
+        :payment => { :credit_card => credit_card }
+      }
+    )
+  end
+
   def test_should_update_customer_shipping_address_request
     @gateway.expects(:ssl_post).returns(successful_update_customer_shipping_address_response)
 
