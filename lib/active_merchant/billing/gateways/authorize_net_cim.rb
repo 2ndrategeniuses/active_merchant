@@ -606,8 +606,12 @@ module ActiveMerchant #:nodoc:
 
       def build_create_customer_profile_transaction_request(xml, options)
         add_transaction(xml, options[:transaction])
-        xml.tag!('extraOptions', "x_test_request=TRUE") if @options[:test]
-        
+        extra_options = []
+        extra_options << "x_test_request=TRUE" if @options[:test]
+        if options.has_key?(:extra_options) && options[:extra_options].is_a?(Hash)
+          options[:extra_options].each { |k, v| extra_options << "#{k}=#{v}" }
+        end
+        xml.tag!('extraOptions', extra_options.join('&')) if extra_options.size > 0
         xml.target!
       end
       

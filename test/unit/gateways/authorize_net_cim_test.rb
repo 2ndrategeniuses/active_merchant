@@ -189,7 +189,8 @@ class AuthorizeNetCimTest < Test::Unit::TestCase
         :customer_payment_profile_id => @customer_payment_profile_id, 
         :type => :auth_only, 
         :amount => @amount
-      }
+      },
+      :extra_options => nil
     )
     assert_instance_of Response, response
     assert_success response
@@ -229,7 +230,8 @@ class AuthorizeNetCimTest < Test::Unit::TestCase
         },
         :amount => @amount,
         :card_code => '123'
-      }
+      },
+      :extra_options => { 'x_duplicate_window' => 0}
     )
     assert_instance_of Response, response
     assert_success response
